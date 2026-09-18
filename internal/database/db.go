@@ -1,3 +1,4 @@
+// Package database provides functionality for connecting to a PostgreSQL database using GORM.
 package database
 
 import (
@@ -9,7 +10,9 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func New(cfg config.DatabaseConfig) (*gorm.DB, error) {
+// New establishes a new connection to the PostgreSQL database using the provided configuration settings.
+// It returns a pointer to the gorm.DB instance and an error if the connection fails.
+func New(cfg *config.DatabaseConfig) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Name, cfg.SSLMode)
 
@@ -17,7 +20,7 @@ func New(cfg config.DatabaseConfig) (*gorm.DB, error) {
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("Failed to connect to database: %w", err)
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
 	return db, nil

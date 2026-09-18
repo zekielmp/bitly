@@ -1,3 +1,4 @@
+// Package main is the entry point of the Bitly application.
 package main
 
 import (
@@ -16,7 +17,7 @@ func main() {
 		log.Fatal().Err(err).Msg("Failed to load config")
 	}
 
-	db, err := database.New(cfg.Database)
+	db, err := database.New(&cfg.Database)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to connect to database")
 	}
@@ -26,8 +27,13 @@ func main() {
 		log.Fatal().Err(err).Msg("Failed to get database connection")
 	}
 
-	defer mainDB.Close()
+	defer func() {
+		if err := mainDB.Close(); err != nil {
+			log.Error().Err(err).Msg("Failed to close database connection")
+		}
+	}()
+
 	gin.SetMode(cfg.Server.GinMode)
 
-	log.Info().Msg("Starting server") 
+	log.Info().Msg("Starting server")
 }
