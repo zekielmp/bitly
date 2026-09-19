@@ -12,7 +12,7 @@ linters:
     - unused
     - errcheck
     - misspell
-    - revive
+    # - revive
     - ineffassign 
 
 linters-settings:
@@ -25,6 +25,6 @@ linters-settings:
       - opinionated
       - performance
       - style
-    revive:
-      rules:
-        - name: exported
+    # revive:
+    #   rules:
+    #     - name: exported

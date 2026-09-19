@@ -13,11 +13,11 @@ import (
 type Server struct {
 	config *config.Config
 	db     *gorm.DB
-	logger zerolog.Logger
+	logger *zerolog.Logger
 }
 
 // New creates an instance of Server
-func New(cfg *config.Config, db *gorm.DB, logger zerolog.Logger) *Server {
+func New(cfg *config.Config, db *gorm.DB, logger *zerolog.Logger) *Server {
 	return &Server{
 		config: cfg,
 		db:     db,
@@ -29,13 +29,13 @@ func New(cfg *config.Config, db *gorm.DB, logger zerolog.Logger) *Server {
 func (s *Server) SetupRoute() *gin.Engine {
 	router := gin.New()
 
-	//Add middlewares
+	/* Add middlewares*/
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	router.Use(s.corMiddleware())
 	router.Use()
 
-	//Add route
+	/* Add route */
 	router.GET("/health", s.healthCheck)
 
 	return router
