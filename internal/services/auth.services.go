@@ -122,5 +122,5 @@ func (s AuthService) generateAuthResponse(user *models.User) (*dto.AuthResponse,
 		},
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-	}, nil
+	}, nil 
 }
