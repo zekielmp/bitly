@@ -25,6 +25,7 @@ type User struct {
 	Orders        []Order        `json:"-"`
 	CartItems     Cart           `json:"-"`
 }
+
 // UserRole represents the role of a user in the system.
 type UserRole string
 
@@ -45,4 +46,4 @@ type RefreshToken struct {
 
 	// Relationships
 	User User `json:"-"`
-} 
+}

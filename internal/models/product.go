@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/gorm"
 )
+
 // Category represents a product category in the system.
 type Category struct {
 	ID          uint           `json:"id" gorm:"primaryKey"`
@@ -48,6 +49,6 @@ type ProductImage struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 
-	// Relationships 
+	// Relationships
 	Product Product `json:"-"`
 }
