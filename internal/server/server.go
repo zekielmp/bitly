@@ -33,10 +33,23 @@ func (s *Server) SetupRoute() *gin.Engine {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	router.Use(s.corMiddleware())
-	router.Use()
+	// router.Use(s.adminMiddleware())
 
 	/* Add route */
 	router.GET("/health", s.healthCheck)
+
+	api := router.Group("/api/v1")
+	{
+		auth := api.Group("/auth")
+		{
+			auth.POST("/register", s.register)
+			auth.POST("/login", s.login)
+			auth.POST("/refresh", s.refreshToken)
+			auth.POST("/logout", s.logout)
+
+		}
+
+	}
 
 	return router
 }
@@ -47,7 +60,7 @@ func (s *Server) healthCheck(c *gin.Context) {
 func (s *Server) corMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.Header("Access-Control-Allow-Origin", "*")
-		ctx.Header("Access-Control-Allow-Methods", "GET,POST, PUT,DELETE,OPTIONS")
+		ctx.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		ctx.Header("Access-Control-Allow-Headers", "Content-Type,Authorization, X-PIN")
 
 		if ctx.Request.Method == "OPTIONS" {

@@ -4,6 +4,7 @@ CREATE TABLE refresh_tokens (
     token VARCHAR(255) UNIQUE NOT NULL,
     expires_at TIME WITH TIME ZONE NOT NULL,
     created_at TIME WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIME WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIME WITH TIME ZONE
 );
 CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens(user_id);

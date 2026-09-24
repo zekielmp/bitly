@@ -25,19 +25,19 @@ func NewAuthService(db *gorm.DB, config *config.Config) *AuthService {
 }
 
 func (s *AuthService) Register(req *dto.RegisterRequest) (*dto.AuthResponse, error) {
-	//check if user exists
+	/*check if user exists */
 	var userExists models.User
-	if err := s.db.Where("email = ?", req.Email).First(&userExists).Error; err != nil {
-		return nil, errors.New("user not found")
+	if err := s.db.Where("email = ?", req.Email).First(&userExists).Error; err == nil {
+		return nil, errors.New("user already exists")
 	}
 
-	//Hash password
+	/*Hash password*/
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	//Create user
+	/*Create user */
 	user := models.User{
 		Email:     req.Email,
 		Password:  hashedPassword,
@@ -50,22 +50,24 @@ func (s *AuthService) Register(req *dto.RegisterRequest) (*dto.AuthResponse, err
 		return nil, err
 	}
 
-	//Create a cart
+	/*Create a cart */
 	cart := models.Cart{UserID: user.ID}
-	if err := s.db.Create(&cart).Error; err != nil {
-		fmt.Println("Unable to create cart")
-	}
-	//generate token
+	defer func() {
+		if err := s.db.Create(&cart).Error; err != nil {
+			fmt.Println("Unable to create cart")
+		}
+	}()
+	/*Generate token*/
 	return s.generateAuthResponse(&user)
 }
 
 func (s *AuthService) Login(req *dto.LoginRequest) (*dto.AuthResponse, error) {
 	var user models.User
-	if err := s.db.Where("email =? AND is_active = ?", req.Email, true).First(&user).Error; err != nil {
+	if err := s.db.Where("email =? AND is_active = ?", req.Email, true).First(&user).Error; err == nil {
 		return nil, errors.New("invalid credentials")
 	}
 
-	//compare password
+	/*compare password*/
 	if !utils.CheckPasswordHash(req.Password, user.Password) {
 		return nil, errors.New("invalid credentials")
 	}
@@ -122,5 +124,5 @@ func (s AuthService) generateAuthResponse(user *models.User) (*dto.AuthResponse,
 		},
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-	}, nil 
+	}, nil
 }

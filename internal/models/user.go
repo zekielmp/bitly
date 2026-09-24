@@ -21,9 +21,9 @@ type User struct {
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 
 	// Relationships
-	RefreshTokens []RefreshToken `json:"-"`
-	Orders        []Order        `json:"-"`
-	CartItems     Cart           `json:"-"`
+	// RefreshTokens []RefreshToken `json:"-"`
+	// Orders        []Order        `json:"-"`
+	// CartItems     Cart           `json:"-"`
 }
 
 // UserRole represents the role of a user in the system.

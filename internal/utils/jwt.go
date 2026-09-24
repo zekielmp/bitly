@@ -18,7 +18,7 @@ type Claims struct {
 
 // GenTokenPair generates access and refresh token
 func GenTokenPair(cfg *config.JwtConfig, userID uint, email, role string) (accessToken, refreshToken string, err error) {
-	//Access Token
+	/*Access Token */
 	accessClaims := &Claims{
 		UserID: userID,
 		Email:  email,
@@ -34,7 +34,7 @@ func GenTokenPair(cfg *config.JwtConfig, userID uint, email, role string) (acces
 		return "", "", err
 	}
 
-	//Refresh Token
+	/*Refresh Token*/
 	refreshClaims := &Claims{
 		UserID: userID,
 		Email:  email,
@@ -64,5 +64,5 @@ func ValidateToken(tokenString, secret string) (*Claims, error) {
 	if Claims, ok := token.Claims.(*Claims); ok && token.Valid {
 		return Claims, nil
 	}
-	return nil, errors.New("Invalid token")
+	return nil, errors.New("invalid token")
 }
