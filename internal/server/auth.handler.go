@@ -67,5 +67,5 @@ func (s *Server) logout(c *gin.Context) {
 		utils.InternalServerErrorResponse(c, "Logout Failed", err)
 		return
 	}
-	utils.SuccessResponse(c, "Logout succussful", nil)
+	utils.SuccessResponse(c, "Logout successful", nil)
 }
