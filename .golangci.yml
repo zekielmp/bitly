@@ -1,0 +1,30 @@
+version: "2"
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters:
+  # default: none
+  enable:
+    - govet
+    - gocritic
+    - staticcheck
+    - unused
+    - errcheck
+    - misspell
+    # - revive
+    - ineffassign 
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  gocritic:
+    enabled-tags:
+      - diagnostics
+      - experimental
+      - opinionated
+      - performance
+      - style
+    # revive:
+    #   rules:
+    #     - name: exported
