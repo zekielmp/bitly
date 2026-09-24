@@ -27,10 +27,10 @@ format:
 # 	@goimports -w .
 
 migrate-up:
-	migrate -path db/migrations -database "postgresql://postgres:password@localhost:5432/Bitly?sslmode=disable" up
+	migrate -path db/migrations -database "postgresql://postgres:password@localhost:5432/bitly?sslmode=disable" up
 
 migrate-down:
-	migrate -path db/migrations -database "postgresql://postgres:password@localhost:5432/Bitly?sslmode=disable" down
+	migrate -path db/migrations -database "postgresql://postgres:password@localhost:5432/bitly?sslmode=disable" down
 
 docker-up:
 	docker compose -f docker/docker-compose.yml up -d
