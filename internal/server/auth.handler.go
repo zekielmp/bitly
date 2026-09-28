@@ -98,4 +98,3 @@ func (s *Server) updateProfile(c *gin.Context) {
 	}
 	utils.SuccessResponse(c, "Profile retrieved successfully", profile)
 }
- 
