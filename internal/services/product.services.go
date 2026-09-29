@@ -89,6 +89,9 @@ func (p *ProductServices) UpdateCategory(id uint, req *dto.UpdateCategoryRequest
 		IsActive:    category.IsActive,
 	}, nil
 }
+func (p *ProductServices) DeleteCategory(id uint) error {
+	return p.db.Delete(models.Category{}, id).Error
+}
 
 // func (p *ProductServices) AddProduct(req *dto.CreateProductRequest) (*dto.ProductResponse, error) {
 // 	product := models.Product{
