@@ -36,7 +36,7 @@ type UpdateProductRequest struct {
 	IsActive    *bool   `json:"is_active"`
 }
 
-type productResponse struct {
+type ProductResponse struct {
 	ID          uint                   `json:"id"`
 	CategoryID  uint                   `json:"category_id"`
 	Name        string                 `json:"name" `
@@ -46,10 +46,10 @@ type productResponse struct {
 	SKU         string                 `json:"sku" `
 	IsActive    bool                   `json:"is_active"`
 	Category    CategoryResponse       `json:"category"`
-	Images      []productImageResponse `json:"images"`
+	Images      []ProductImageResponse `json:"images"`
 }
 
-type productImageResponse struct {
+type ProductImageResponse struct {
 	ID        uint   `json:"id"`
 	URL       string `json:"url"`
 	AltText   string `json:"alt_text"`

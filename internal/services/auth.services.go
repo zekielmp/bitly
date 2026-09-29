@@ -45,7 +45,7 @@ func (s *AuthService) Register(req *dto.RegisterRequest) (*dto.AuthResponse, err
 		LastName:  req.LastName,
 		Phone:     req.Password,
 		Role:      models.UserRoleCustomer,
-		// CreatedAt: time.Now(),
+		CreatedAt: time.Now(),
 	}
 	if err := s.db.Create(&user).Error; err != nil {
 		return nil, err

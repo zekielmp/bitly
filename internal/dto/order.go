@@ -17,10 +17,10 @@ type CartResponse struct {
 }
 
 type CartItemsResponse struct {
-	ID       uint            `json:"id"`
-	Product  productResponse `json:"product"`
-	Quantity int             `json:"quantity"`
-	Subtotal float64         `json:"subtotal"`
+	ID uint `json:"id"`
+	// Product  productResponse `json:"product"`
+	Quantity int     `json:"quantity"`
+	Subtotal float64 `json:"subtotal"`
 }
 
 type OrderResponse struct {
@@ -33,8 +33,8 @@ type OrderResponse struct {
 }
 
 type OrderItemsResponse struct {
-	ID       uint            `json:"id"`
-	Product  productResponse `json:"product"`
-	Quantity int             `json:"quantity"`
-	Price    float64         `json:"price"`
+	ID uint `json:"id"`
+	// Product  productResponse `json:"product"`
+	Quantity int     `json:"quantity"`
+	Price    float64 `json:"price"`
 }
