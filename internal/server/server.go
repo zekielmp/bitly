@@ -57,6 +57,10 @@ func (s *Server) SetupRoute() *gin.Engine {
 				users.PUT("/profile", s.updateProfile)
 			}
 		}
+		api.POST("/category", s.createCategory)
+		api.POST("/product", s.addProduct)
+		{
+		}
 
 	}
 
