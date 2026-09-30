@@ -1,6 +1,8 @@
 package server
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/zekielmp/Bitly/internal/dto"
 	"github.com/zekielmp/Bitly/internal/services"
@@ -72,6 +74,7 @@ func (s *Server) logout(c *gin.Context) {
 
 func (s *Server) getprofile(c *gin.Context) {
 	userID := c.GetUint("user_id")
+	log.Println(userID)
 	userService := services.NewUserService(s.db)
 	profile, err := userService.GetProfile(userID)
 	if err != nil {
