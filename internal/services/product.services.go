@@ -176,13 +176,34 @@ func (p *ProductServices) UpdateProduct(req *dto.UpdateProductRequest, id uint) 
 	return p.GetProduct(id)
 }
 
+func (s *ProductServices) AddProductImage(productID uint, url, altText string) error {
+
+	var count int64
+	s.db.Model(&models.ProductImage{}).Where("product_id = ?", productID).Count(&count)
+
+	image := models.ProductImage{
+		ProductID: productID,
+		URL:       url,
+		AltText:   altText,
+		IsPrimary: count == 0, //First image is primary
+	}
+
+	return s.db.Create(&image).Error
+
+}
+
+func (p *ProductServices) DeleteProduct(id uint) error {
+	return p.db.Delete(&models.Product{}, id).Error
+}
+
 func (p *ProductServices) productResponse(product *models.Product) dto.ProductResponse {
 	images := make([]dto.ProductImageResponse, len(product.Images))
 	for i := range product.Images {
 		images[i] = dto.ProductImageResponse{
-			ID:      product.Images[i].ID,
-			URL:     product.Images[i].URL,
-			AltText: product.Images[i].AltText,
+			ID:        product.Images[i].ID,
+			URL:       product.Images[i].URL,
+			AltText:   product.Images[i].AltText,
+			IsPrimary: product.Images[i].IsPrimary,
 		}
 	}
 	return dto.ProductResponse{
@@ -201,8 +222,4 @@ func (p *ProductServices) productResponse(product *models.Product) dto.ProductRe
 		},
 		Images: images,
 	}
-}
-
-func (p *ProductServices) DeleteProduct(id uint) error {
-	return p.db.Delete(&models.Product{}, id).Error
 }
