@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/zekielmp/Bitly/internal/dto"
-	"github.com/zekielmp/Bitly/internal/services"
 	"github.com/zekielmp/Bitly/internal/utils"
 )
 
@@ -15,9 +14,8 @@ func (s *Server) register(c *gin.Context) {
 		utils.BadRequestResponse(c, "invalid request data", err)
 		return
 	}
-	authService := services.NewAuthService(s.db, s.config)
-	response, err := authService.Register(&req)
 
+	response, err := s.auth.Register(&req)
 	if err != nil {
 		utils.BadRequestResponse(c, "Registration failed", err)
 		return
@@ -32,8 +30,8 @@ func (s *Server) login(c *gin.Context) {
 		utils.BadRequestResponse(c, "invalid request data", err)
 		return
 	}
-	authService := services.NewAuthService(s.db, s.config)
-	response, err := authService.Login(&req)
+
+	response, err := s.auth.Login(&req)
 	if err != nil {
 		utils.UnauthorizedResponse(c, "Login failed", err)
 		return
@@ -48,8 +46,7 @@ func (s *Server) refreshToken(c *gin.Context) {
 		return
 	}
 
-	authService := services.NewAuthService(s.db, s.config)
-	response, err := authService.RefreshToken(&req)
+	response, err := s.auth.RefreshToken(&req)
 	if err != nil {
 		utils.BadRequestResponse(c, "Token refresh failed", err)
 		return
@@ -64,8 +61,7 @@ func (s *Server) logout(c *gin.Context) {
 		return
 	}
 
-	authService := services.NewAuthService(s.db, s.config)
-	if err := authService.Logout(req.RefreshToken); err != nil {
+	if err := s.auth.Logout(req.RefreshToken); err != nil {
 		utils.InternalServerErrorResponse(c, "Logout Failed", err)
 		return
 	}
@@ -75,8 +71,8 @@ func (s *Server) logout(c *gin.Context) {
 func (s *Server) getprofile(c *gin.Context) {
 	userID := c.GetUint("user_id")
 	log.Println(userID)
-	userService := services.NewUserService(s.db)
-	profile, err := userService.GetProfile(userID)
+
+	profile, err := s.user.GetProfile(userID)
 	if err != nil {
 		utils.NotFoundResponse(c, "User not found", err)
 		return
@@ -93,8 +89,7 @@ func (s *Server) updateProfile(c *gin.Context) {
 		return
 	}
 
-	userServive := services.NewUserService(s.db)
-	profile, err := userServive.UpdateProfile(userID, &req)
+	profile, err := s.user.UpdateProfile(userID, &req)
 	if err != nil {
 		utils.InternalServerErrorResponse(c, "Failed to update profile", err)
 		return
