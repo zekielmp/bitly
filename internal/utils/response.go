@@ -43,7 +43,7 @@ func CreatedResponse(c *gin.Context, message string, data interface{}) {
 
 func ErrorResponse(c *gin.Context, statusCode int, message string, err error) {
 	response := Response{
-		Success: true,
+		Success: false,
 		Message: message,
 	}
 	if err != nil {
