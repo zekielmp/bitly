@@ -200,3 +200,7 @@ func (p *ProductServices) productResponse(product *models.Product) dto.ProductRe
 		Images: images,
 	}
 }
+
+func (p *ProductServices) DeleteProduct(id uint) error {
+	return p.db.Delete(models.Product{}, id).Error
+}
