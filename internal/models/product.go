@@ -36,8 +36,8 @@ type Product struct {
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
 
 	// Relationships
-	// Category    Category       `json:"category" `
-	// Images      []ProductImage `json:"images" `
+	Category Category       `json:"category" `
+	Images   []ProductImage `json:"images" `
 	// OrdrerItems []OrderItem    `json:"-"`
 	// CartItems   []CartItem     `json:"-"`
 }
@@ -47,6 +47,7 @@ type ProductImage struct {
 	ID        uint           `json:"id" gorm:"primaryKey"`
 	ProductID uint           `json:"product_id" gorm:"not null"`
 	URL       string         `json:"url" gorm:"not null"`
+	AltText   string         `json:"alt_text"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
