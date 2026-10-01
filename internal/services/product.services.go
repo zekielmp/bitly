@@ -92,7 +92,7 @@ func (p *ProductServices) UpdateCategory(id uint, req *dto.UpdateCategoryRequest
 }
 
 func (p *ProductServices) DeleteCategory(id uint) error {
-	return p.db.Delete(models.Category{}, id).Error
+	return p.db.Delete(&models.Category{}, id).Error
 }
 
 func (p *ProductServices) AddProduct(req *dto.CreateProductRequest) (*dto.ProductResponse, error) {
@@ -159,7 +159,8 @@ func (p *ProductServices) UpdateProduct(req *dto.UpdateProductRequest, id uint) 
 	if err := p.db.First(&product, id).Error; err != nil {
 		return nil, err
 	}
-	//assign value to product models using req dto
+
+	/*assign value to product models using req dto*/
 	product.CategoryID = req.CategoryID
 	product.Name = req.Name
 	product.Description = req.Description
@@ -203,5 +204,5 @@ func (p *ProductServices) productResponse(product *models.Product) dto.ProductRe
 }
 
 func (p *ProductServices) DeleteProduct(id uint) error {
-	return p.db.Delete(models.Product{}, id).Error
+	return p.db.Delete(&models.Product{}, id).Error
 }

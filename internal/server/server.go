@@ -6,22 +6,33 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/zekielmp/Bitly/internal/config"
+	"github.com/zekielmp/Bitly/internal/services"
 	"gorm.io/gorm"
 )
 
 // Server struct
 type Server struct {
-	config *config.Config
-	db     *gorm.DB
-	logger *zerolog.Logger
+	config  *config.Config
+	db      *gorm.DB
+	logger  *zerolog.Logger
+	auth    *services.AuthService
+	user    *services.UserService
+	product *services.ProductServices
 }
 
 // New creates an instance of Server
-func New(cfg *config.Config, db *gorm.DB, logger *zerolog.Logger) *Server {
+func New(cfg *config.Config,
+	db *gorm.DB, logger *zerolog.Logger,
+	auth *services.AuthService,
+	product *services.ProductServices,
+	user *services.UserService) *Server {
 	return &Server{
-		config: cfg,
-		db:     db,
-		logger: logger,
+		config:  cfg,
+		db:      db,
+		logger:  logger,
+		auth:    auth,
+		user:    user,
+		product: product,
 	}
 }
 
@@ -33,7 +44,6 @@ func (s *Server) SetupRoute() *gin.Engine {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	router.Use(s.corMiddleware())
-	// router.Use(s.adminMiddleware())
 
 	/* Add route */
 	router.GET("/health", s.healthCheck)
@@ -51,15 +61,36 @@ func (s *Server) SetupRoute() *gin.Engine {
 		protected := api.Group("/")
 		protected.Use(s.authMiddleware())
 		{
+			/*user routes*/
 			users := protected.Group("/users")
 			{
 				users.GET("/profile", s.getprofile)
 				users.PUT("/profile", s.updateProfile)
 			}
+			/*category routes*/
+			category := protected.Group("/categories")
+			{
+				category.POST("/", s.adminMiddleware(), s.createCategory)
+				category.PUT("/:id", s.adminMiddleware(), s.updateCategory)
+				category.DELETE("/:id", s.adminMiddleware(), s.deleteCategory)
+			}
+			/*product routes*/
+			product := protected.Group("/products")
+			{
+				product.POST("/", s.adminMiddleware(), s.addProduct)
+				product.PUT("/:id", s.adminMiddleware(), s.updateProduct)
+				product.DELETE("/:id", s.adminMiddleware(), s.deleteProduct)
+			}
 		}
-		api.POST("/category", s.createCategory)
-		api.POST("/product", s.addProduct)
 		{
+		}
+
+		/*public routes*/
+		public := api.Group("/public")
+		{
+			public.GET("/categories", s.getCategories)
+			public.GET("/products", s.getProducts)
+			public.GET("/products/:id", s.getProduct)
 		}
 
 	}

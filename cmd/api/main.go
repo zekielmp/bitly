@@ -4,6 +4,8 @@ package main
 import (
 	"context"
 	"fmt"
+
+	// "fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,6 +17,7 @@ import (
 	"github.com/zekielmp/Bitly/internal/database"
 	"github.com/zekielmp/Bitly/internal/logger"
 	"github.com/zekielmp/Bitly/internal/server"
+	"github.com/zekielmp/Bitly/internal/services"
 )
 
 func main() {
@@ -44,7 +47,11 @@ func main() {
 
 	gin.SetMode(cfg.Server.GinMode)
 
-	srv := server.New(cfg, db, &log)
+	authService := services.NewAuthService(db, cfg)
+	productService := services.NewProductService(db)
+	userService := services.NewUserService(db)
+
+	srv := server.New(cfg, db, &log, authService, productService, userService)
 
 	router := srv.SetupRoute()
 	httpServer := &http.Server{
