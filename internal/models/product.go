@@ -48,6 +48,7 @@ type ProductImage struct {
 	ProductID uint           `json:"product_id" gorm:"not null"`
 	URL       string         `json:"url" gorm:"not null"`
 	AltText   string         `json:"alt_text"`
+	IsPrimary bool           `json:"is_primary"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`

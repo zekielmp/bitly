@@ -16,6 +16,7 @@ import (
 	"github.com/zekielmp/Bitly/internal/config"
 	"github.com/zekielmp/Bitly/internal/database"
 	"github.com/zekielmp/Bitly/internal/logger"
+	"github.com/zekielmp/Bitly/internal/providers"
 	"github.com/zekielmp/Bitly/internal/server"
 	"github.com/zekielmp/Bitly/internal/services"
 )
@@ -50,8 +51,9 @@ func main() {
 	authService := services.NewAuthService(db, cfg)
 	productService := services.NewProductService(db)
 	userService := services.NewUserService(db)
+	uploadService := services.NewUploadService(providers.NewLocalUploadProvider(cfg.Upload.Path))
 
-	srv := server.New(cfg, db, &log, authService, productService, userService)
+	srv := server.New(cfg, db, &log, authService, productService, userService, uploadService)
 
 	router := srv.SetupRoute()
 	httpServer := &http.Server{

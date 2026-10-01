@@ -10,10 +10,10 @@ import (
 )
 
 type UploadService struct {
-	provider interfaces.UploadProvide
+	provider interfaces.UploadProvider
 }
 
-func NewUploadService(provider interfaces.UploadProvide) *UploadService {
+func NewUploadService(provider interfaces.UploadProvider) *UploadService {
 	return &UploadService{
 		provider: provider,
 	}

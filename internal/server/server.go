@@ -18,6 +18,7 @@ type Server struct {
 	auth    *services.AuthService
 	user    *services.UserService
 	product *services.ProductServices
+	upload  *services.UploadService
 }
 
 // New creates an instance of Server
@@ -25,7 +26,8 @@ func New(cfg *config.Config,
 	db *gorm.DB, logger *zerolog.Logger,
 	auth *services.AuthService,
 	product *services.ProductServices,
-	user *services.UserService) *Server {
+	user *services.UserService,
+	upload *services.UploadService) *Server {
 	return &Server{
 		config:  cfg,
 		db:      db,
@@ -33,6 +35,7 @@ func New(cfg *config.Config,
 		auth:    auth,
 		user:    user,
 		product: product,
+		upload:  upload,
 	}
 }
 
@@ -47,6 +50,8 @@ func (s *Server) SetupRoute() *gin.Engine {
 
 	/* Add route */
 	router.GET("/health", s.healthCheck)
+
+	router.Static("/uploads", "./uploads")
 
 	api := router.Group("/api/v1")
 	{
@@ -80,6 +85,8 @@ func (s *Server) SetupRoute() *gin.Engine {
 				product.POST("/", s.adminMiddleware(), s.addProduct)
 				product.PUT("/:id", s.adminMiddleware(), s.updateProduct)
 				product.DELETE("/:id", s.adminMiddleware(), s.deleteProduct)
+				product.POST("/:id/images", s.adminMiddleware(), s.uploadProductImages)
+
 			}
 		}
 		{
