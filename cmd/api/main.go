@@ -15,6 +15,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/zekielmp/Bitly/internal/config"
 	"github.com/zekielmp/Bitly/internal/database"
+	"github.com/zekielmp/Bitly/internal/interfaces"
 	"github.com/zekielmp/Bitly/internal/logger"
 	"github.com/zekielmp/Bitly/internal/providers"
 	"github.com/zekielmp/Bitly/internal/server"
@@ -51,7 +52,15 @@ func main() {
 	authService := services.NewAuthService(db, cfg)
 	productService := services.NewProductService(db)
 	userService := services.NewUserService(db)
-	uploadService := services.NewUploadService(providers.NewLocalUploadProvider(cfg.Upload.Path))
+
+	var uploadProvider interfaces.UploadProvider
+	if cfg.Upload.UploadProvider == "s3" {
+		uploadProvider = providers.NewS3Provider(cfg)
+	} else {
+		uploadProvider = providers.NewLocalUploadProvider(cfg.Upload.Path)
+	}
+
+	uploadService := services.NewUploadService(uploadProvider)
 
 	srv := server.New(cfg, db, &log, authService, productService, userService, uploadService)
 
