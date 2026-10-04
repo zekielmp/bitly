@@ -93,7 +93,7 @@ func (s *CartService) UpdateCartItem(userID, itemID uint, req *dto.UpdateCartIte
 }
 
 func (s *CartService) RemoveFromCart(userID, itemsID uint) error {
-	return s.db.Joins("JOIN carts ON cart_items.cart_id = carts.id").Where("cart_items.id = ? AND carts.user_id = ?", itemsID, userID).Delete(&models.CartItem{}).Error
+	return s.db.Where("id  = ? AND cart_id IN (?)", itemsID, s.db.Select("id").Table("Carts").Where("user_id = ?", userID)).Delete(&models.CartItem{}).Error
 }
 
 func (s *CartService) cartResponse(cart *models.Cart) *dto.CartResponse {
