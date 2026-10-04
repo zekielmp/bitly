@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/zekielmp/Bitly/internal/interfaces"
 )
 
@@ -25,7 +27,8 @@ func (s *UploadService) UploadProductImage(productID uint, file *multipart.FileH
 		return "", fmt.Errorf("invalid file type: %s", ext)
 	}
 
-	path := fmt.Sprintf("products/%d/%s", productID, file.Filename)
+	newFile := uuid.New().String() + ext
+	path := fmt.Sprintf("products/%d/%s%s", productID, newFile, ext)
 	return s.provider.UploadFile(file, path)
 }
 
