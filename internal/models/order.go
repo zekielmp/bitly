@@ -58,7 +58,7 @@ type Cart struct {
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 
 	// Relationships
-	// CartItems []CartItem `json:"items" `
+	CartItems []CartItem `json:"items" `
 }
 
 // CartItem represents an item in a shopping cart.
@@ -72,6 +72,6 @@ type CartItem struct {
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 
 	// Relationships
-	// Cart    Cart    `json:"-"`
-	// Product Product `json:"product" `
+	Cart    Cart    `json:"-"`
+	Product Product `json:"product" `
 }

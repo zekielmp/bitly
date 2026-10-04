@@ -30,14 +30,23 @@ func (p *LocalUploadProvider) UploadFile(file *multipart.FileHeader, path string
 	if err != nil {
 		return "", err
 	}
-	defer src.Close()
+	defer func() {
+		if err := src.Close(); err != nil {
+			return
+		}
+	}()
 
 	/*create destination*/
 	dst, err := os.Create(filePath)
 	if err != nil {
 		return "", err
 	}
-	defer dst.Close()
+
+	defer func() {
+		if err := dst.Close(); err != nil {
+			return
+		}
+	}()
 
 	/*read from source to destination*/
 	if _, err := dst.ReadFrom(src); err != nil {

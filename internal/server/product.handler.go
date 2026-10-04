@@ -163,7 +163,6 @@ func (s *Server) uploadProductImages(c *gin.Context) {
 		utils.BadRequestResponse(c, "No file uploaded", err)
 	}
 
-
 	url, err := s.upload.UploadProductImage(uint(id), file)
 	if err != nil {
 		utils.InternalServerErrorResponse(c, "Failed to upload image", err)

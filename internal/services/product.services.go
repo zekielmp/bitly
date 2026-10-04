@@ -185,7 +185,7 @@ func (s *ProductServices) AddProductImage(productID uint, url, altText string) e
 		ProductID: productID,
 		URL:       url,
 		AltText:   altText,
-		IsPrimary: count == 0, //First image is primary
+		IsPrimary: count == 0, /*First image is primary*/
 	}
 
 	return s.db.Create(&image).Error
@@ -223,4 +223,3 @@ func (p *ProductServices) productResponse(product *models.Product) dto.ProductRe
 		Images: images,
 	}
 }
- 
