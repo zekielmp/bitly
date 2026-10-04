@@ -71,7 +71,7 @@ func (s *CartService) AddToCart(userID uint, req *dto.AddToCartRequest) (*dto.Ca
 	return s.GetCart(userID)
 }
 
-func (s *CartService) UpdateCartItem(userID, itemID uint, req *dto.AddToCartRequest) (*dto.CartResponse, error) {
+func (s *CartService) UpdateCartItem(userID, itemID uint, req *dto.UpdateCartItemRequest) (*dto.CartResponse, error) {
 	var cartItem models.CartItem
 	if err := s.db.Joins("JOIN carts ON cart_items.cart_id = cart.id").Where("cart_items.id = ? AND cart.user_id = ?", itemID, userID).First(&cartItem).Error; err != nil {
 		return nil, errors.New("cart item not found")

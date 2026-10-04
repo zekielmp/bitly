@@ -19,6 +19,7 @@ type Server struct {
 	user    *services.UserService
 	product *services.ProductServices
 	upload  *services.UploadService
+	cart    *services.CartService
 }
 
 // New creates an instance of Server
@@ -27,7 +28,8 @@ func New(cfg *config.Config,
 	auth *services.AuthService,
 	product *services.ProductServices,
 	user *services.UserService,
-	upload *services.UploadService) *Server {
+	upload *services.UploadService,
+	cart *services.CartService) *Server {
 	return &Server{
 		config:  cfg,
 		db:      db,
@@ -36,6 +38,7 @@ func New(cfg *config.Config,
 		user:    user,
 		product: product,
 		upload:  upload,
+		cart:    cart,
 	}
 }
 
@@ -88,18 +91,26 @@ func (s *Server) SetupRoute() *gin.Engine {
 				product.POST("/:id/images", s.adminMiddleware(), s.uploadProductImages)
 
 			}
-		}
-		{
-		}
+			/*Cart routes*/
+			cart := protected.Group("/cart")
+			{
+				cart.GET("/", s.getCart)
+				cart.POST("/items", s.addToCart)
+				cart.PUT("/items/:id", s.updateCartItem)
+				cart.DELETE("/items/:id", s.removeFromCart)
+			}
+			{
+			}
 
-		/*public routes*/
-		public := api.Group("/public")
-		{
-			public.GET("/categories", s.getCategories)
-			public.GET("/products", s.getProducts)
-			public.GET("/products/:id", s.getProduct)
-		}
+			/*public routes*/
+			public := api.Group("/public")
+			{
+				public.GET("/categories", s.getCategories)
+				public.GET("/products", s.getProducts)
+				public.GET("/products/:id", s.getProduct)
+			}
 
+		}
 	}
 
 	return router
