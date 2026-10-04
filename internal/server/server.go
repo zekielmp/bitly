@@ -111,7 +111,7 @@ func (s *Server) SetupRoute() *gin.Engine {
 			}
 
 		}
-	}
+	} 
 
 	return router
 }
