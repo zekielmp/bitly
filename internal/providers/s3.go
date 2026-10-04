@@ -33,7 +33,7 @@ func NewS3Provider(cfg *appconfig.Config) *S3Provider {
 		panic("unable to load AWS SDK config, " + err.Error())
 	}
 
-	//configure for localstack
+	/*configure for localstack*/
 	client := s3.NewFromConfig(awsCfg, func(o *s3.Options) {
 		if cfg.Aws.S3Endpoint != "" {
 			o.BaseEndpoint = aws.String(cfg.Aws.S3Endpoint)
@@ -55,7 +55,12 @@ func (p *S3Provider) UploadFile(file *multipart.FileHeader, path string) (string
 		return "", err
 	}
 
-	defer src.Close()
+	defer func() {
+		err := src.Close()
+		if err != nil {
+			return
+		}
+	}()
 
 	dst, err := p.uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(p.bucketName),

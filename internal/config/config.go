@@ -55,7 +55,7 @@ type UploadConfig struct {
 	Path        string
 	MaxFileSize int64
 
-	//UploadProvider can be s3 or local
+	/*UploadProvider can be s3 or local*/
 	UploadProvider string
 }
 
