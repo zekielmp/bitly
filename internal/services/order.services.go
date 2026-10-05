@@ -6,6 +6,7 @@ import (
 
 	"github.com/zekielmp/Bitly/internal/dto"
 	"github.com/zekielmp/Bitly/internal/models"
+	"github.com/zekielmp/Bitly/internal/utils"
 	"gorm.io/gorm"
 )
 
@@ -35,7 +36,7 @@ func (s *OrderService) CreateOrder(userID uint) (*dto.OrderResponse, error) {
 			return errors.New("cart is empty")
 		}
 
-		//calculate and validate stock
+		/*calculate and validate stock*/
 		var totalAmount float64
 		var orderItems []models.OrderItem
 
@@ -55,13 +56,13 @@ func (s *OrderService) CreateOrder(userID uint) (*dto.OrderResponse, error) {
 				Price:     cartItem.Product.Price,
 			})
 
-			//Update product stock
+			/*Update product stock*/
 			cartItem.Product.Stock -= cartItem.Quantity
 			if err := tx.Save(&cartItem.Product).Error; err != nil {
 				return err
 			}
 
-			//create order
+			/*create order*/
 			order := models.Order{
 				UserID:      userID,
 				Status:      string(models.OrderStatusPending),
@@ -72,7 +73,7 @@ func (s *OrderService) CreateOrder(userID uint) (*dto.OrderResponse, error) {
 				return err
 			}
 
-			//clear cart
+			/*clear cart*/
 			if err := tx.Where("cart_id = ?", cart.ID).Delete(&models.CartItem{}).Error; err != nil {
 				return err
 			}
@@ -90,6 +91,54 @@ func (s *OrderService) CreateOrder(userID uint) (*dto.OrderResponse, error) {
 		return nil, err
 	}
 	return orderRes, nil
+}
+
+func (s *OrderService) GetOrders(userID uint, page, limit int) ([]dto.OrderResponse, *utils.PaginationMeta, error) {
+	if page < 1 {
+		page = 1
+	}
+
+	if limit < 1 {
+		limit = 10
+	}
+
+	if limit > 100 {
+		limit = 100
+	}
+
+	offset := (page - 1) * limit
+	var orders []models.Order
+	var total int64
+
+	s.db.Model(&models.Order{}).Where("user_id = ?", userID).Count(&total)
+
+	if err := s.db.Preload("Orderitems.Product.Category").Where("user_id = ?", userID).Order("created_at DESC").Offset(offset).Limit(limit).Find(&orders).Error; err != nil {
+		return nil, nil, err
+	}
+
+	response := make([]dto.OrderResponse, len(orders))
+	for i := range orders {
+		order := &orders[i]
+		response[i] = s.orderResponse(order)
+	}
+	totalPages := int((total*int64(limit) - 1) / int64(limit))
+
+	meta := &utils.PaginationMeta{
+		Page:       page,
+		Limit:      limit,
+		Total:      total,
+		TotalPages: totalPages,
+	}
+	return response, meta, nil
+}
+
+func (s *OrderService) GetOrder(userID, orderID uint) (*dto.OrderResponse, error) {
+	var order models.Order
+	if err := s.db.Preload("OrderItems.Product.Category").Where("id = ? AND user_id = ?", orderID, userID).First(&order).Error; err != nil {
+		return nil, err
+	}
+	res := s.orderResponse(&order)
+	return &res, nil
 }
 
 func (s *OrderService) getOrderResponse(tx *gorm.DB, orderID uint) (*dto.OrderResponse, error) {
