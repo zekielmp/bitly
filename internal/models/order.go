@@ -17,8 +17,8 @@ type Order struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 
 	// Relationships
-	// 	User       User        `json:"user" `
-	// 	OrderItems []OrderItem `json:"items" `
+	User       User        `json:"user" `
+	OrderItems []OrderItem `json:"items" `
 }
 
 // OrderStatus represents the status of an order.
@@ -45,8 +45,8 @@ type OrderItem struct {
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 
 	// Relationships
-	// Order   Order   `json:"-"`
-	// Product Product `json:"product" `
+	Order   Order   `json:"-"`
+	Product Product `json:"product" `
 }
 
 // Cart represents a shopping cart for a user.
