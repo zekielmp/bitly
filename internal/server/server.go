@@ -104,6 +104,12 @@ func (s *Server) SetupRoute() *gin.Engine {
 			}
 			{
 			}
+			orders := protected.Group("/orders")
+			{
+				orders.POST("/", s.createOrder)
+				orders.GET("/", s.getOrders)
+				orders.GET("/:id", s.getOrder)
+			}
 
 			/*public routes*/
 			public := api.Group("/public")
