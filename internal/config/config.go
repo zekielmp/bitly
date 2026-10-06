@@ -48,7 +48,7 @@ type AwsConfig struct {
 	SecretAccessKey string
 	S3BucketName    string
 	S3Endpoint      string
-	EventQueName    string
+	EventQueueName  string
 }
 
 // UploadConfig holds the file upload-related configuration settings.
@@ -92,7 +92,7 @@ func Load() (*Config, error) {
 			SecretAccessKey: getEnv("AWS_SECRET_ACCESS_KEY", "test"),
 			S3BucketName:    getEnv("S3_BUCKET_NAME", "bitly-uploads"),
 			S3Endpoint:      getEnv("S3_ENDPOINT", "http://localhost:4566"),
-			EventQueName:    getEnv("AWS_EVENT_QUEUE_NAME", "bitly-events"),
+			EventQueueName:  getEnv("AWS_EVENT_QUEUE_NAME", "bitly-events"),
 		},
 		Upload: UploadConfig{
 			Path:           getEnv("UPLOAD_PATH", "./uploads"),
