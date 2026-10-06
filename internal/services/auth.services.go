@@ -7,20 +7,23 @@ import (
 
 	"github.com/zekielmp/Bitly/internal/config"
 	"github.com/zekielmp/Bitly/internal/dto"
+	"github.com/zekielmp/Bitly/internal/interfaces/events"
 	"github.com/zekielmp/Bitly/internal/models"
 	"github.com/zekielmp/Bitly/internal/utils"
 	"gorm.io/gorm"
 )
 
 type AuthService struct {
-	db     *gorm.DB
-	config *config.Config
+	db             *gorm.DB
+	config         *config.Config
+	EventPublisher events.Publisher
 }
 
-func NewAuthService(db *gorm.DB, config *config.Config) *AuthService {
+func NewAuthService(db *gorm.DB, config *config.Config, event events.Publisher) *AuthService {
 	return &AuthService{
-		db:     db,
-		config: config,
+		db:             db,
+		config:         config,
+		EventPublisher: event,
 	}
 }
 

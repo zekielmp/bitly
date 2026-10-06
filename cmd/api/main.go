@@ -16,32 +16,13 @@ import (
 	"github.com/zekielmp/Bitly/internal/config"
 	"github.com/zekielmp/Bitly/internal/database"
 	"github.com/zekielmp/Bitly/internal/interfaces"
+	"github.com/zekielmp/Bitly/internal/interfaces/events"
 	"github.com/zekielmp/Bitly/internal/logger"
 	"github.com/zekielmp/Bitly/internal/providers"
 	"github.com/zekielmp/Bitly/internal/server"
 	"github.com/zekielmp/Bitly/internal/services"
 )
 
-//@title Bitly E-Commerce API
-//@version 1.0
-//@description A modern e-commerce API built with Go,Gin, and GORM
-//@termOfService http://swagger.io/terms/
-
-//@contact.name Ezekiel Giwa
-//@contact.url https://github.com/zekielmp
-//@contact.email ezekielgiwa35@gmail.com
-
-//@license.name Apache 2.0
-//@license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-//@host localhost:8080
-//@BasePath /api
-//@shemas http https
-
-//@securityDefinitions.apikey BearerAuth
-//@in header
-//@name Authorization
-//@description Type "Bearer" followed by a space and JWT token 
 func main() {
 
 	log := logger.New()
@@ -67,9 +48,14 @@ func main() {
 		}
 	}()
 
+	ctx := context.Background()
+	events, err := events.NewEventPublisher(ctx, &cfg.Aws)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to create event ppublisher")
+	}
 	gin.SetMode(cfg.Server.GinMode)
 
-	authService := services.NewAuthService(db, cfg)
+	authService := services.NewAuthService(db, cfg, events)
 	productService := services.NewProductService(db)
 	userService := services.NewUserService(db)
 	cartService := services.NewCartServices(db)
