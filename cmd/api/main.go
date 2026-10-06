@@ -22,6 +22,26 @@ import (
 	"github.com/zekielmp/Bitly/internal/services"
 )
 
+//@title Bitly E-Commerce API
+//@version 1.0
+//@description A modern e-commerce API built with Go,Gin, and GORM
+//@termOfService http://swagger.io/terms/
+
+//@contact.name Ezekiel Giwa
+//@contact.url https://github.com/zekielmp
+//@contact.email ezekielgiwa35@gmail.com
+
+//@license.name Apache 2.0
+//@license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+//@host localhost:8080
+//@BasePath /api
+//@shemas http https
+
+//@securityDefinitions.apikey BearerAuth
+//@in header
+//@name Authorization
+//@description Type "Bearer" followed by a space and JWT token 
 func main() {
 
 	log := logger.New()
@@ -53,6 +73,7 @@ func main() {
 	productService := services.NewProductService(db)
 	userService := services.NewUserService(db)
 	cartService := services.NewCartServices(db)
+	orderService := services.NewOrderService(db)
 
 	var uploadProvider interfaces.UploadProvider
 	if cfg.Upload.UploadProvider == "s3" {
@@ -63,7 +84,7 @@ func main() {
 
 	uploadService := services.NewUploadService(uploadProvider)
 
-	srv := server.New(cfg, db, &log, authService, productService, userService, uploadService, cartService)
+	srv := server.New(cfg, db, &log, authService, productService, userService, uploadService, cartService, orderService)
 
 	router := srv.SetupRoute()
 	httpServer := &http.Server{

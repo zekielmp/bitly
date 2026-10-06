@@ -20,6 +20,7 @@ type Server struct {
 	product *services.ProductServices
 	upload  *services.UploadService
 	cart    *services.CartService
+	order   *services.OrderService
 }
 
 // New creates an instance of Server
@@ -29,7 +30,8 @@ func New(cfg *config.Config,
 	product *services.ProductServices,
 	user *services.UserService,
 	upload *services.UploadService,
-	cart *services.CartService) *Server {
+	cart *services.CartService,
+	order *services.OrderService) *Server {
 	return &Server{
 		config:  cfg,
 		db:      db,
@@ -39,6 +41,7 @@ func New(cfg *config.Config,
 		product: product,
 		upload:  upload,
 		cart:    cart,
+		order:   order,
 	}
 }
 
@@ -101,6 +104,12 @@ func (s *Server) SetupRoute() *gin.Engine {
 			}
 			{
 			}
+			orders := protected.Group("/orders")
+			{
+				orders.POST("/", s.createOrder)
+				orders.GET("/", s.getOrders)
+				orders.GET("/:id", s.getOrder) 
+			}
 
 			/*public routes*/
 			public := api.Group("/public")
@@ -111,7 +120,7 @@ func (s *Server) SetupRoute() *gin.Engine {
 			}
 
 		}
-	} 
+	}
 
 	return router
 }
