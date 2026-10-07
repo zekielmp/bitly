@@ -64,6 +64,8 @@ func main() {
 	var uploadProvider interfaces.UploadProvider
 	if cfg.Upload.UploadProvider == "s3" {
 		uploadProvider = providers.NewS3Provider(cfg)
+	} else if cfg.Upload.UploadProvider == "cld" {
+		uploadProvider = providers.NewCloudinaryProvider(cfg)
 	} else {
 		uploadProvider = providers.NewLocalUploadProvider(cfg.Upload.Path)
 	}
