@@ -14,16 +14,16 @@ import (
 )
 
 type AuthService struct {
-	db             *gorm.DB
-	config         *config.Config
-	EventPublisher events.Publisher
+	db     *gorm.DB
+	config *config.Config
+	event  events.Publisher
 }
 
 func NewAuthService(db *gorm.DB, config *config.Config, event events.Publisher) *AuthService {
 	return &AuthService{
-		db:             db,
-		config:         config,
-		EventPublisher: event,
+		db:     db,
+		config: config,
+		event:  event,
 	}
 }
 
@@ -115,6 +115,11 @@ func (s AuthService) generateAuthResponse(user *models.User) (*dto.AuthResponse,
 		ExpiresAt: time.Now().Add(s.config.Jwt.RefreshTokenExpiresIn),
 	}
 	s.db.Create(&refreshTokenModel)
+
+	err = s.event.Publish("USER_LOGGED_IN", user, map[string]string{})
+	if err != nil {
+		return nil, fmt.Errorf("Unable to publish user Authentication event: %w", err)
+	}
 
 	return &dto.AuthResponse{
 		User: dto.UserResponse{
