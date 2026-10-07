@@ -7,6 +7,7 @@ import (
 
 	"github.com/zekielmp/Bitly/internal/config"
 	"github.com/zekielmp/Bitly/internal/dto"
+	"github.com/zekielmp/Bitly/internal/interfaces/events"
 	"github.com/zekielmp/Bitly/internal/models"
 	"github.com/zekielmp/Bitly/internal/utils"
 	"gorm.io/gorm"
@@ -15,12 +16,14 @@ import (
 type AuthService struct {
 	db     *gorm.DB
 	config *config.Config
+	event  events.Publisher
 }
 
-func NewAuthService(db *gorm.DB, config *config.Config) *AuthService {
+func NewAuthService(db *gorm.DB, config *config.Config, event events.Publisher) *AuthService {
 	return &AuthService{
 		db:     db,
 		config: config,
+		event:  event,
 	}
 }
 
@@ -112,6 +115,11 @@ func (s AuthService) generateAuthResponse(user *models.User) (*dto.AuthResponse,
 		ExpiresAt: time.Now().Add(s.config.Jwt.RefreshTokenExpiresIn),
 	}
 	s.db.Create(&refreshTokenModel)
+
+	err = s.event.Publish("USER_LOGGED_IN", user, map[string]string{})
+	if err != nil {
+		return nil, fmt.Errorf("unable to publish user Authentication event: %w", err)
+	}
 
 	return &dto.AuthResponse{
 		User: dto.UserResponse{

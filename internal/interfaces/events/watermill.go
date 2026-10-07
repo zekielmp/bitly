@@ -40,7 +40,7 @@ func (ep *EventPublisher) Close() error {
 	return ep.publisher.Close()
 }
 
-func NewEventPublisher(ctx context.Context, cfg appconfig.AwsConfig) (*EventPublisher, error) {
+func NewEventPublisher(ctx context.Context, cfg *appconfig.AwsConfig) (*EventPublisher, error) {
 	logger := watermill.NewStdLogger(false, true)
 
 	awsCfg, err := providers.CreateAWSConfig(ctx, cfg.S3Endpoint, cfg.Region)
