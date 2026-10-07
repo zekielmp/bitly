@@ -3,6 +3,7 @@ package providers
 import (
 	"context"
 	"fmt"
+	"log"
 	"mime/multipart"
 
 	"github.com/cloudinary/cloudinary-go/v2"
@@ -51,6 +52,7 @@ func (p *CloudinaryProvider) UploadFile(file *multipart.FileHeader, path string)
 	if err != nil {
 		return "", err
 	}
+	log.Printf("cloud=%q key=%q secretLen=%d", p.CloudName, p.ApiKey, len(p.ApiSecret))
 
 	if upload.Error.Message != "" {
 		return "", fmt.Errorf("Cloudinary upload error: %s", upload.Error.Message)
