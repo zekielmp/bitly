@@ -11,11 +11,12 @@ import (
 
 // Config holds the application configuration settings.
 type Config struct {
-	Server   ServerConfig
-	Database DatabaseConfig
-	Jwt      JwtConfig
-	Aws      AwsConfig
-	Upload   UploadConfig
+	Server     ServerConfig
+	Database   DatabaseConfig
+	Jwt        JwtConfig
+	Aws        AwsConfig
+	Upload     UploadConfig
+	Cloudinary CloudinaryConfig
 }
 
 // ServerConfig holds the server-related configuration settings.
@@ -60,6 +61,13 @@ type UploadConfig struct {
 	UploadProvider string
 }
 
+// CloudinaryConfig holds the Cloudinary-related configuration settings.
+type CloudinaryConfig struct {
+	CloudName string
+	ApiKey    string
+	ApiSecret string
+}
+
 // Load loads the configuration settings from environment variables and returns a Config struct.
 func Load() (*Config, error) {
 	_ = godotenv.Load()
@@ -98,6 +106,11 @@ func Load() (*Config, error) {
 			Path:           getEnv("UPLOAD_PATH", "./uploads"),
 			MaxFileSize:    maxUploadSize,
 			UploadProvider: getEnv("UPLOAD_PROVIDER", "local"),
+		},
+		Cloudinary: CloudinaryConfig{
+			CloudName: getEnv("Cloudinary_CLOUD_NAME", "dkf17mver"),
+			ApiKey:    getEnv("Cloudinary_API_KEY", "641282684592681"),
+			ApiSecret: getEnv("Cloudinary_API_SECRET", "HXANbHaSN175JCXek1uwZ0xy"),
 		},
 	}, nil
 }

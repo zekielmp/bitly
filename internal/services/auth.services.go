@@ -116,10 +116,10 @@ func (s AuthService) generateAuthResponse(user *models.User) (*dto.AuthResponse,
 	}
 	s.db.Create(&refreshTokenModel)
 
-	err = s.event.Publish("USER_LOGGED_IN", user, map[string]string{})
-	if err != nil {
-		return nil, fmt.Errorf("unable to publish user Authentication event: %w", err)
-	}
+	// err = s.event.Publish("USER_LOGGED_IN", user, map[string]string{})
+	// if err != nil {
+	// 	return nil, fmt.Errorf("unable to publish user Authentication event: %w", err)
+	// }
 
 	return &dto.AuthResponse{
 		User: dto.UserResponse{
