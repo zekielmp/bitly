@@ -3,7 +3,6 @@ package services
 import (
 	"fmt"
 	"mime/multipart"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -26,18 +25,18 @@ func NewUploadService(provider interfaces.UploadProvider) *UploadService {
 func (s *UploadService) UploadProductImage(productID uint, file *multipart.FileHeader) (string, error) {
 
 	ext := strings.ToLower(filepath.Ext(file.Filename))
-	newFile := uuid.New().String() + ext
-	if os.Getenv("UPLOAD_PROVIDER") == "cld" {
-		// Remove the file extension from the filename
-		path := fmt.Sprintf("products/%d/%s", productID, newFile)
-		return s.provider.UploadFile(file, path)
-	}
-
+	newFile := uuid.New().String() 
 	if !isvalidImageExt(ext) {
 		return "", fmt.Errorf("invalid file type: %s", ext)
 	}
 
-	path := fmt.Sprintf("products/%d/%s%s", productID, newFile, ext)
+	// if os.Getenv("UPLOAD_PROVIDER") == "cld" {
+	// 	// Remove the file extension from the filename
+	// 	path := fmt.Sprintf("products/%d/%s", productID, newFile)
+	// 	return s.provider.UploadFile(file, path)
+	// }
+
+	path := fmt.Sprintf("products/%d/%s", productID, newFile)
 	return s.provider.UploadFile(file, path)
 }
 
