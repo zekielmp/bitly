@@ -65,19 +65,37 @@ Create a `.env` file in the project root:
 
 ```env
 # Example, adjust to match internal/config/config.go
-DATABASE_URL=postgres://user:password@localhost:5432/dbname?sslmode=disable
-JWT_SECRET=your-secret
-STORAGE_PROVIDER=local   # or s3
-AWS_REGION=
-AWS_BUCKET=
+PORT= 8080
+GIN_MODE=debug
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD= password
+DB_NAME= bitly 
+DB_SSLmODE = disable
+
+JWT_SECRET = secret
+JWT_EXPIRES_IN=24h
+REFRESH_TOKEN_EXPIRES_IN=72h
+
+AWS_REGION=east-1
+AWS_ACCESS_KEY_ID =test
+AWS_SECRET_ACCESS_KEY = test
+AWS_S3_BUCKET= bitly-uploads
+AWS_S3_ENDPOINT= https://Localstack:9000
+UPLOAD_PROVIDER=local   # s3 or cld
+
+UPLOAD_PATH=./uploads
+MAX_UPLOAD_SIZE= 10485760 #10MB
 ```
 
 ### Start dependencies
 
 ```bash
 # 1. Clone and install dependencies
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+git clone https://github.com/zekielmp/bitly.git
+cd bitly
 go mod download
 
 # 2. Configure environment
