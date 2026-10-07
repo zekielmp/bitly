@@ -108,7 +108,7 @@ func (s *Server) SetupRoute() *gin.Engine {
 			{
 				orders.POST("/", s.createOrder)
 				orders.GET("/", s.getOrders)
-				orders.GET("/:id", s.getOrder) 
+				orders.GET("/:id", s.getOrder)
 			}
 
 			/*public routes*/

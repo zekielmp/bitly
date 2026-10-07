@@ -118,7 +118,7 @@ func (s AuthService) generateAuthResponse(user *models.User) (*dto.AuthResponse,
 
 	err = s.event.Publish("USER_LOGGED_IN", user, map[string]string{})
 	if err != nil {
-		return nil, fmt.Errorf("Unable to publish user Authentication event: %w", err)
+		return nil, fmt.Errorf("unable to publish user Authentication event: %w", err)
 	}
 
 	return &dto.AuthResponse{
