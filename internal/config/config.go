@@ -108,9 +108,9 @@ func Load() (*Config, error) {
 			UploadProvider: getEnv("UPLOAD_PROVIDER", "local"),
 		},
 		Cloudinary: CloudinaryConfig{
-			CloudName: getEnv("Cloudinary_CLOUD_NAME", "dkf17mver"),
-			ApiKey:    getEnv("Cloudinary_API_KEY", "641282684592681"),
-			ApiSecret: getEnv("Cloudinary_API_SECRET", "HXANbHaSN175JCXek1uwZ0xy"),
+			CloudName: getEnv("Cloudinary_CLOUD_NAME", "cloudinary_cloud_name"),
+			ApiKey:    getEnv("Cloudinary_API_KEY", "cloudinary_api_key"),
+			ApiSecret: getEnv("Cloudinary_API_SECRET", "cloudinary_api_secret"),
 		},
 	}, nil
 }
