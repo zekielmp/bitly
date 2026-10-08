@@ -203,14 +203,18 @@ func (p *ProductServices) AddProductReview(productID uint, userID uint, req *dto
 	if count > 0 {
 		return fmt.Errorf("user has already reviewed this product")
 	}
+	if err := p.db.Preload("User").Where("id = ?", userID).Find(&models.User{}).First(&models.User{}, userID).Error; err != nil {
+		return fmt.Errorf("failed to find user")
+	}
 
 	review := models.ProductReviews{
 		ProductID: productID,
 		User: models.User{
 			ID: userID,
 		},
-		Data:   req.Data,
-		Rating: req.Rating,
+		Data:      req.Data,
+		Rating:    req.Rating,
+		CreatedAt: time.Now(),
 	}
 	return p.db.Create(&review).Error
 }
@@ -226,6 +230,7 @@ func (p *ProductServices) productResponse(product *models.Product) dto.ProductRe
 		}
 	}
 
+	p.db.Preload("User").Where("product_id = ?", product.ID).Find(&product.ProductReviews)
 	reviews := make([]dto.ProductReviewResponse, len(product.ProductReviews))
 	for i := range product.ProductReviews {
 		reviews[i] = dto.ProductReviewResponse{
