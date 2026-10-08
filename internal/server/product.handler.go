@@ -176,3 +176,26 @@ func (s *Server) uploadProductImages(c *gin.Context) {
 
 	utils.SuccessResponse(c, "Image uploaded successfully", map[string]string{"url": url})
 }
+
+func (s *Server) addProductReviews(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		utils.BadRequestResponse(c, "Invalid product ID", err)
+		return
+	}
+	userID := c.GetUint("user_id")
+
+	var req dto.ProductReviewRequest
+	err = c.ShouldBindJSON(&req)
+	if err != nil {
+		utils.BadRequestResponse(c, "Invalid request data", err)
+		return
+	}
+
+	err = s.product.AddProductReview(uint(id), userID, &req)
+	if err != nil {
+		utils.InternalServerErrorResponse(c, "Failed to add product review", err)
+		return
+	}
+	utils.CreatedResponse(c, "Product review added successfully", nil)
+}

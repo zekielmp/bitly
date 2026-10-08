@@ -92,6 +92,7 @@ func (s *Server) SetupRoute() *gin.Engine {
 				product.PUT("/:id", s.adminMiddleware(), s.updateProduct)
 				product.DELETE("/:id", s.adminMiddleware(), s.deleteProduct)
 				product.POST("/:id/images", s.adminMiddleware(), s.uploadProductImages)
+				product.POST("/:id/reviews", s.addProductReviews)
 
 			}
 			/*Cart routes*/
