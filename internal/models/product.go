@@ -56,3 +56,11 @@ type ProductImage struct {
 	// Relationships
 	// Product Product `json:"-"`
 }
+
+type ProductReviews struct {
+	ID        uint           `json:"id" gorm:"primaryKey"`
+	User      User           `json:"user"`
+	Data      string         `json:"data"`
+	CreatedAt time.Time      `json:"created_at"`
+	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+}

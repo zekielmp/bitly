@@ -55,3 +55,13 @@ type ProductImageResponse struct {
 	AltText   string `json:"alt_text"`
 	IsPrimary bool   `json:"is_primary"`
 }
+type ProductReviewRequest struct {
+	Data string `json:"data" binding:"required"`
+}
+
+type ProductReviewResponse struct {
+	ID        uint   `json:"id"`
+	User      UserResponse `json:"user"`
+	Data      string `json:"data"`
+	CreatedAt string `json:"created_at"`
+}
