@@ -37,16 +37,17 @@ type UpdateProductRequest struct {
 }
 
 type ProductResponse struct {
-	ID          uint                   `json:"id"`
-	CategoryID  uint                   `json:"category_id"`
-	Name        string                 `json:"name" `
-	Description string                 `json:"description"`
-	Price       float64                `json:"price"`
-	Stock       int                    `json:"stock" `
-	SKU         string                 `json:"sku" `
-	IsActive    bool                   `json:"is_active"`
-	Category    CategoryResponse       `json:"category"`
-	Images      []ProductImageResponse `json:"images"`
+	ID          uint                    `json:"id"`
+	CategoryID  uint                    `json:"category_id"`
+	Name        string                  `json:"name" `
+	Description string                  `json:"description"`
+	Price       float64                 `json:"price"`
+	Stock       int                     `json:"stock" `
+	SKU         string                  `json:"sku" `
+	IsActive    bool                    `json:"is_active"`
+	Category    CategoryResponse        `json:"category"`
+	Images      []ProductImageResponse  `json:"images"`
+	Reviews     []ProductReviewResponse `json:"reviews"`
 }
 
 type ProductImageResponse struct {
@@ -56,12 +57,13 @@ type ProductImageResponse struct {
 	IsPrimary bool   `json:"is_primary"`
 }
 type ProductReviewRequest struct {
-	Data string `json:"data" binding:"required"`
+	Data   string `json:"data" binding:"required"`
+	Rating uint   `json:"rating" binding:"required"`
 }
 
 type ProductReviewResponse struct {
-	ID        uint   `json:"id"`
-	User      UserResponse `json:"user"`
-	Data      string `json:"data"`
-	CreatedAt string `json:"created_at"`
+	ID     uint         `json:"id"`
+	User   UserResponse `json:"user"`
+	Data   string       `json:"data"`
+	Rating uint         `json:"rating"`
 }

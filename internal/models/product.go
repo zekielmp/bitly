@@ -36,10 +36,11 @@ type Product struct {
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
 
 	// Relationships
-	Category Category       `json:"category" `
-	Images   []ProductImage `json:"images" `
-	// OrdrerItems []OrderItem    `json:"-"`
-	// CartItems   []CartItem     `json:"-"`
+	Category       Category         `json:"category" `
+	Images         []ProductImage   `json:"images" `
+	ProductReviews []ProductReviews `json:"product_reviews"`
+	OrdrerItems    []OrderItem      `json:"-"`
+	CartItems      []CartItem       `json:"-"`
 }
 
 // ProductImage represents an image associated with a product.
@@ -59,8 +60,11 @@ type ProductImage struct {
 
 type ProductReviews struct {
 	ID        uint           `json:"id" gorm:"primaryKey"`
+	UserID    uint           `json:"user_id" gorm:"not null"`
+	ProductID uint           `json:"product_id"`
 	User      User           `json:"user"`
 	Data      string         `json:"data"`
+	Rating    uint           `json:"rating"`
 	CreatedAt time.Time      `json:"created_at"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 }
