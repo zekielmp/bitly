@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/zekielmp/Bitly/internal/dto"
@@ -176,10 +177,10 @@ func (p *ProductServices) UpdateProduct(req *dto.UpdateProductRequest, id uint) 
 	return p.GetProduct(id)
 }
 
-func (s *ProductServices) AddProductImage(productID uint, url, altText string) error {
+func (p *ProductServices) AddProductImage(productID uint, url, altText string) error {
 
 	var count int64
-	s.db.Model(&models.ProductImage{}).Where("product_id = ?", productID).Count(&count)
+	p.db.Model(&models.ProductImage{}).Where("product_id = ?", productID).Count(&count)
 
 	image := models.ProductImage{
 		ProductID: productID,
@@ -188,12 +189,30 @@ func (s *ProductServices) AddProductImage(productID uint, url, altText string) e
 		IsPrimary: count == 0, /*First image is primary*/
 	}
 
-	return s.db.Create(&image).Error
+	return p.db.Create(&image).Error
 
 }
 
 func (p *ProductServices) DeleteProduct(id uint) error {
 	return p.db.Delete(&models.Product{}, id).Error
+}
+
+func (p *ProductServices) AddProductReview(productID uint, userID uint, req *dto.ProductReviewRequest) error {
+	var count int64
+	p.db.Model(&models.ProductReviews{}).Where("product_id = ? AND user_id = ?", productID, userID).Count(&count)
+	if count > 0 {
+		return fmt.Errorf("user has already reviewed this product")
+	}
+
+	review := models.ProductReviews{
+		ProductID: productID,
+		User: models.User{
+			ID: userID,
+		},
+		Data:   req.Data,
+		Rating: req.Rating,
+	}
+	return p.db.Create(&review).Error
 }
 
 func (p *ProductServices) productResponse(product *models.Product) dto.ProductResponse {
@@ -206,6 +225,21 @@ func (p *ProductServices) productResponse(product *models.Product) dto.ProductRe
 			IsPrimary: product.Images[i].IsPrimary,
 		}
 	}
+
+	reviews := make([]dto.ProductReviewResponse, len(product.ProductReviews))
+	for i := range product.ProductReviews {
+		reviews[i] = dto.ProductReviewResponse{
+			ID: product.ProductReviews[i].ID,
+			User: dto.UserResponse{
+				ID:        product.ProductReviews[i].User.ID,
+				FirstName: product.ProductReviews[i].User.FirstName,
+				LastName:  product.ProductReviews[i].User.LastName,
+			},
+			Data:   product.ProductReviews[i].Data,
+			Rating: product.ProductReviews[i].Rating,
+		}
+	}
+
 	return dto.ProductResponse{
 		ID:          product.ID,
 		CategoryID:  product.CategoryID,
@@ -220,6 +254,7 @@ func (p *ProductServices) productResponse(product *models.Product) dto.ProductRe
 			Description: product.Category.Description,
 			IsActive:    product.Category.IsActive,
 		},
-		Images: images,
+		Images:  images,
+		Reviews: reviews,
 	}
 }
