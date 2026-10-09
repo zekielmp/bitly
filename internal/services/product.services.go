@@ -236,7 +236,7 @@ func (p *ProductServices) productResponse(product *models.Product) dto.ProductRe
 		reviews[i] = dto.ProductReviewResponse{
 			ID: product.ProductReviews[i].ID,
 			User: dto.UserResponse{
-				ID:        product.ProductReviews[i].User.ID,
+				// ID:        product.ProductReviews[i].User.ID,
 				FirstName: product.ProductReviews[i].User.FirstName,
 				LastName:  product.ProductReviews[i].User.LastName,
 			},
@@ -254,7 +254,7 @@ func (p *ProductServices) productResponse(product *models.Product) dto.ProductRe
 		Stock:       product.Stock,
 		SKU:         product.SKU,
 		Category: dto.CategoryResponse{
-			ID:          product.Category.ID,
+			// ID:          product.Category.ID,
 			Name:        product.Category.Name,
 			Description: product.Category.Description,
 			IsActive:    product.Category.IsActive,
